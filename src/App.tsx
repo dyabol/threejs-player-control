@@ -1,25 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Stars } from "@react-three/drei";
+import React, { Suspense } from "react";
+import { Canvas } from "react-three-fiber";
+import CameraControls from "./components/CameraControls";
+import Ground from "./components/Ground";
+import Loading from "./components/Loading";
+import McCree from "./components/McCree";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Canvas camera={{ position: [0, 0, 5] }}>
+        {/* <gridHelper args={[100, 10, 0x888888, 0x444444]} /> */}
+        <ambientLight />
+        <CameraControls />
+        <Stars />
+        <Ground />
+        <Suspense fallback={<Loading />}>
+          <McCree />
+        </Suspense>
+      </Canvas>
+    </>
   );
 }
 
