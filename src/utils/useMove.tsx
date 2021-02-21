@@ -12,9 +12,6 @@ type Props = {
 type UseMove = {
   playerState: PlayerState;
   playerPrevState: PlayerState | null;
-};
-
-type Keys = {
   space: boolean;
   up: boolean;
   down: boolean;
@@ -27,8 +24,6 @@ const useMove = ({ actions }: Props) => {
   const ref = useRef<UseMove>({
     playerPrevState: null,
     playerState: "idle",
-  });
-  const keysRef = useRef<Keys>({
     space: false,
     up: false,
     down: false,
@@ -118,7 +113,7 @@ const useMove = ({ actions }: Props) => {
     }
   });
 
-  const update = (keys: Keys) => {
+  const update = (keys: UseMove) => {
     if (keys.up || keys.down) {
       ref.current.playerPrevState = ref.current.playerState;
       if (keys.shift) {
@@ -133,9 +128,8 @@ const useMove = ({ actions }: Props) => {
   };
 
   const keyDown = (event: KeyboardEvent) => {
-    //console.log("keyDown", event.key);
-    const prevKeys = { ...keysRef.current };
-    const keys = keysRef.current;
+    const prevKeys = { ...ref.current };
+    const keys = ref.current;
     switch (event.code.toLocaleLowerCase()) {
       case "space":
         keys.space = true;
@@ -169,7 +163,7 @@ const useMove = ({ actions }: Props) => {
 
   const keyUp = (event: KeyboardEvent) => {
     //console.log("keyUp", event.key);
-    const keys = keysRef.current;
+    const keys = ref.current;
     switch (event.code.toLocaleLowerCase()) {
       case "space":
         keys.space = false;
