@@ -1,7 +1,13 @@
 import { useEffect, useRef } from "react";
 import _ from "lodash";
+import { useFrame } from "react-three-fiber";
+import { AnimationAction } from "three";
 
 type PlayerState = "idle" | "walk" | "run";
+
+type Props = {
+  actions: { [key: string]: AnimationAction };
+};
 
 type UseMove = {
   playerState: PlayerState;
@@ -17,7 +23,7 @@ type Keys = {
   shift: boolean;
 };
 
-const useMove = () => {
+const useMove = ({ actions }: Props) => {
   const ref = useRef<UseMove>({
     playerPrevState: null,
     playerState: "idle",
@@ -29,6 +35,87 @@ const useMove = () => {
     left: false,
     right: false,
     shift: false,
+  });
+
+  const walk = (playerPrevState: PlayerState | null) => {
+    const curAction = actions.walk;
+    if (playerPrevState) {
+      const prevAction = actions[playerPrevState];
+      curAction.enabled = true;
+
+      if (playerPrevState === "run") {
+        const ratio =
+          curAction.getClip().duration / prevAction.getClip().duration;
+        curAction.time = prevAction.time * ratio;
+      } else {
+        curAction.time = 0.0;
+        curAction.setEffectiveTimeScale(1.0);
+        curAction.setEffectiveWeight(1.0);
+      }
+      curAction.crossFadeFrom(prevAction, 0.1, true);
+      curAction.play();
+    } else {
+      curAction.play();
+    }
+  };
+
+  const idle = (playerPrevState: PlayerState | null) => {
+    const idleAction = actions.idle;
+    if (playerPrevState) {
+      const prevAction = actions[playerPrevState];
+      idleAction.time = 0.0;
+      idleAction.enabled = true;
+      idleAction.setEffectiveTimeScale(1.0);
+      idleAction.setEffectiveWeight(1.0);
+      idleAction.crossFadeFrom(prevAction, 0.25, true);
+      idleAction.play();
+    } else {
+      idleAction.play();
+    }
+  };
+
+  const run = (playerPrevState: PlayerState | null) => {
+    const curAction = actions.run;
+    if (playerPrevState) {
+      const prevAction = actions[playerPrevState];
+
+      curAction.enabled = true;
+
+      if (playerPrevState === "walk") {
+        const ratio =
+          curAction.getClip().duration / prevAction.getClip().duration;
+        curAction.time = prevAction.time * ratio;
+      } else {
+        curAction.time = 0.0;
+        curAction.setEffectiveTimeScale(1.0);
+        curAction.setEffectiveWeight(1.0);
+      }
+
+      curAction.crossFadeFrom(prevAction, 0.1, true);
+      curAction.play();
+    } else {
+      curAction.play();
+    }
+  };
+
+  useFrame(() => {
+    const { playerPrevState, playerState } = ref.current;
+    if (playerState !== playerPrevState) {
+      switch (playerState) {
+        case "walk":
+          walk?.(playerPrevState);
+          break;
+        case "idle":
+          idle?.(playerPrevState);
+          break;
+        case "run":
+          run?.(playerPrevState);
+          break;
+        default:
+          break;
+      }
+      ref.current.playerPrevState = playerState;
+    }
   });
 
   const update = (keys: Keys) => {
