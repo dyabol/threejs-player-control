@@ -9,11 +9,11 @@ const Plane = () => {
   return (
     <group ref={ref}>
       <mesh>
-        <planeBufferGeometry args={[15, 15]} />
+        <planeBufferGeometry args={[150, 150]} />
         <meshBasicMaterial color="#ffb385" />
       </mesh>
       <mesh receiveShadow>
-        <planeBufferGeometry args={[15, 15]} />
+        <planeBufferGeometry args={[150, 150]} />
         <shadowMaterial color="lightsalmon" />
       </mesh>
     </group>

@@ -2,12 +2,11 @@ import { useSphere } from "@react-three/cannon";
 import { useGLTF } from "@react-three/drei";
 import React, { useEffect, useRef } from "react";
 import { AnimationAction, AnimationMixer, Quaternion, Vector3 } from "three";
-import { useFrame } from "react-three-fiber";
 import useMove from "../utils/useMove";
-import { split } from "lodash";
+import useFrameElapsed from "../utils/useFrameElapsed";
+import ThirdCamera from "./ThirdCamera";
 
 const Player: React.FC = (props) => {
-  const prevElapsedTime = useRef<number>();
   const decceleration = useRef(new Vector3(-0.0005, -0.0001, -5.0));
   const acceleration = useRef(new Vector3(1, 0.125, 50.0));
   const velocity = useRef(new Vector3(0, 0, 0));
@@ -21,6 +20,7 @@ const Player: React.FC = (props) => {
   const move = useMove({ actions });
 
   useEffect(() => {
+    scene.rotateY(Math.PI);
     api.velocity.subscribe(
       (v) => (velocity.current = new Vector3(v[0], v[1], v[2]))
     );
@@ -29,20 +29,14 @@ const Player: React.FC = (props) => {
   const [player, api] = useSphere(() => ({
     type: "Dynamic",
     mass: 1,
-    position: [0, 10, 0],
+    position: [0, 1, 0],
     ...props,
   }));
 
-  useFrame(({ clock }, delta) => {
+  useFrameElapsed(({ clock }, delta, timeInSeconds) => {
     mixer?.update(delta);
     const controlObject = player.current;
     if (controlObject) {
-      const elapsedTime = clock.getElapsedTime();
-      if (prevElapsedTime.current == null) {
-        prevElapsedTime.current = elapsedTime;
-      }
-      const timeInSeconds = clock.getElapsedTime() - prevElapsedTime.current;
-
       const _velocity = velocity.current.clone();
       const _decceleration = decceleration.current;
       const _Q = new Quaternion();
@@ -63,13 +57,15 @@ const Player: React.FC = (props) => {
 
       const acc = acceleration.current.clone();
       if (move.current.shift) {
+        acc.multiplyScalar(4.0);
+      } else {
         acc.multiplyScalar(2.0);
       }
 
-      if (move.current.down) {
+      if (move.current.up) {
         _velocity.z += acc.z * timeInSeconds;
       }
-      if (move.current.up) {
+      if (move.current.down) {
         _velocity.z -= acc.z * timeInSeconds;
       }
 
@@ -109,14 +105,23 @@ const Player: React.FC = (props) => {
       pos.add(forward);
       pos.add(sideways);
       api.position.set.apply(this, pos.toArray());
-      prevElapsedTime.current = elapsedTime;
+
+      if (
+        move.current.space &&
+        Math.abs(Number(velocity.current.y.toFixed(2))) < 0.05
+      ) {
+        api.velocity.set(velocity.current.x, 10, velocity.current.z);
+      }
     }
   });
 
   return (
-    <mesh ref={player} attach="geometry">
-      <primitive object={scene} />
-    </mesh>
+    <>
+      <ThirdCamera target={player} />
+      <mesh ref={player} attach="geometry">
+        <primitive object={scene} />
+      </mesh>
+    </>
   );
 };
 
