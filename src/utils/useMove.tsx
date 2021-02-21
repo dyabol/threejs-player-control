@@ -5,7 +5,7 @@ type PlayerState = "idle" | "walk" | "run";
 
 type UseMove = {
   playerState: PlayerState;
-  playerPrevState: PlayerState;
+  playerPrevState: PlayerState | null;
 };
 
 type Keys = {
@@ -19,7 +19,7 @@ type Keys = {
 
 const useMove = () => {
   const ref = useRef<UseMove>({
-    playerPrevState: "idle",
+    playerPrevState: null,
     playerState: "idle",
   });
   const keysRef = useRef<Keys>({
@@ -32,16 +32,16 @@ const useMove = () => {
   });
 
   const update = (keys: Keys) => {
-    if (keys.up) {
-      if (ref.current.playerState !== "walk") {
-        ref.current.playerPrevState = ref.current.playerState;
+    if (keys.up || keys.down) {
+      ref.current.playerPrevState = ref.current.playerState;
+      if (keys.shift) {
+        ref.current.playerState = "run";
+      } else {
         ref.current.playerState = "walk";
       }
     } else {
-      if (ref.current.playerState !== "idle") {
-        ref.current.playerPrevState = ref.current.playerState;
-        ref.current.playerState = "idle";
-      }
+      ref.current.playerPrevState = ref.current.playerState;
+      ref.current.playerState = "idle";
     }
   };
 
@@ -69,7 +69,8 @@ const useMove = () => {
       case "keyd":
         keys.right = true;
         break;
-      case "shift":
+      case "shiftleft":
+      case "shiftright":
         keys.shift = true;
         break;
     }
@@ -102,7 +103,8 @@ const useMove = () => {
       case "keyd":
         keys.right = false;
         break;
-      case "shift":
+      case "shiftleft":
+      case "shiftright":
         keys.shift = false;
         break;
     }
