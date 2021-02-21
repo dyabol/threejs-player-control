@@ -1,6 +1,6 @@
 import create from "zustand";
 
-export type State = {
+type State = {
   orbitEnabled: boolean;
   setOrbitEnabled: (orbitEnabled: boolean) => void;
 };
