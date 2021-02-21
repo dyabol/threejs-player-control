@@ -10,7 +10,7 @@ const Plane = () => {
     <group ref={ref}>
       <mesh>
         <planeBufferGeometry args={[150, 150]} />
-        <meshBasicMaterial color="#ffb385" />
+        <meshBasicMaterial color="#a8a373" />
       </mesh>
       <mesh receiveShadow>
         <planeBufferGeometry args={[150, 150]} />

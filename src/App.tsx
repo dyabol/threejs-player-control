@@ -7,6 +7,7 @@ import Loading from "./components/Loading";
 import Player from "./components/Player";
 import { Physics } from "@react-three/cannon";
 import { Vector3 } from "three";
+import Box from "./components/Box";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
         <Sky sunPosition={new Vector3(100, 10, 100)} />
         <Physics gravity={[0, -30, 0]}>
+          <Box position={[5, 10, 5]} />
           <Plane />
           <Suspense fallback={<Loading />}>
             <Player />

@@ -27,9 +27,9 @@ const Player: React.FC = (props) => {
   }, []);
 
   const [player, api] = useSphere(() => ({
-    type: "Dynamic",
-    mass: 1,
-    position: [0, 1, 0],
+    type: "Static",
+    mass: 50,
+    position: [0, 0, 0],
     ...props,
   }));
 
