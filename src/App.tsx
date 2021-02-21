@@ -8,8 +8,22 @@ import Player from "./components/Player";
 import { Physics } from "@react-three/cannon";
 import { Vector3 } from "three";
 import Box from "./components/Box";
+import Sphere from "./components/Sphere";
 
 function App() {
+  const cubes = [];
+  for (let i = 0; i < 100; i++) {
+    var x =
+      Math.ceil(Math.random() * 11) * (Math.round(Math.random()) ? 1 : -1);
+    var z =
+      Math.ceil(Math.random() * 11) * (Math.round(Math.random()) ? 1 : -1);
+    if (i % 2 === 1) {
+      cubes.push(<Box position={[x, 10 + i, z]} />);
+    } else {
+      cubes.push(<Sphere position={[x, 10 + i, z]} />);
+    }
+  }
+
   return (
     <>
       <Canvas
@@ -23,7 +37,7 @@ function App() {
         <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
         <Sky sunPosition={new Vector3(100, 10, 100)} />
         <Physics gravity={[0, -30, 0]}>
-          <Box position={[5, 10, 5]} />
+          {cubes}
           <Plane />
           <Suspense fallback={<Loading />}>
             <Player />

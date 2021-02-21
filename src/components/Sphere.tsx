@@ -1,4 +1,4 @@
-import { useBox } from "@react-three/cannon";
+import { useSphere } from "@react-three/cannon";
 import React from "react";
 import { getRandomColor } from "../utils/color";
 
@@ -7,7 +7,7 @@ type Props = {
 };
 
 const Box: React.FC<Props> = (props) => {
-  const [ref] = useBox(() => ({
+  const [ref] = useSphere(() => ({
     ...props,
     mass: 1,
     type: "Dynamic",
@@ -15,7 +15,7 @@ const Box: React.FC<Props> = (props) => {
 
   return (
     <mesh {...props} ref={ref} scale={[1, 1, 1]}>
-      <boxBufferGeometry args={[1, 1, 1]} />
+      <sphereBufferGeometry args={[0.5, 32, 32]} />
       <meshStandardMaterial color={getRandomColor()} />
     </mesh>
   );
