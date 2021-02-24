@@ -196,8 +196,8 @@ const useMove = ({ actions }: Props) => {
     window.addEventListener("keydown", keyDown, false);
     window.addEventListener("keyup", keyUp, false);
     return () => {
-      window.removeEventListener("keydown", keyDown);
-      window.removeEventListener("keyup", keyUp);
+      window.removeEventListener("keydown", keyDown, false);
+      window.removeEventListener("keyup", keyUp, false);
     };
   }, []);
 

@@ -11,10 +11,11 @@ const Box: React.FC<Props> = (props) => {
     ...props,
     mass: 1,
     type: "Dynamic",
+    args: [1, 1, 1],
   }));
 
   return (
-    <mesh {...props} ref={ref} scale={[1, 1, 1]}>
+    <mesh receiveShadow castShadow {...props} ref={ref}>
       <boxBufferGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color={getRandomColor()} />
     </mesh>

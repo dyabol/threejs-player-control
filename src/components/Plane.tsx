@@ -7,16 +7,10 @@ const Plane = () => {
     rotation: [-Math.PI / 2, 0, 0],
   }));
   return (
-    <group ref={ref}>
-      <mesh>
-        <planeBufferGeometry args={[150, 150]} />
-        <meshBasicMaterial color="#a8a373" />
-      </mesh>
-      <mesh receiveShadow>
-        <planeBufferGeometry args={[150, 150]} />
-        <shadowMaterial color="lightsalmon" />
-      </mesh>
-    </group>
+    <mesh ref={ref} receiveShadow>
+      <planeBufferGeometry attach="geometry" args={[50, 50]} />
+      <shadowMaterial attach="material" color="#171717" opacity={0.5} />
+    </mesh>
   );
 };
 
