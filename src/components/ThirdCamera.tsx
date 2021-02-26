@@ -25,6 +25,7 @@ const ThirdCamera: React.FC<Props> = ({ target }) => {
     idealLookat.add(target.position);
     return idealLookat;
   };
+
   useFrameElapsed((state, delta, timeElapsed) => {
     if (target.current) {
       const idealOffset = calculateIdealOffset(target.current);
@@ -41,6 +42,7 @@ const ThirdCamera: React.FC<Props> = ({ target }) => {
       camera.lookAt(currentLookat.current);
     }
   });
+
   return null;
 };
 

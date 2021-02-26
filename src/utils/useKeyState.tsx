@@ -9,7 +9,7 @@ const keyMap: { [key: string]: string } = {
   Shift: "run",
 };
 
-const useBoxState = () => {
+const useKeyState = () => {
   const [keys, setKeys] = useState({
     jump: false,
     forward: false,
@@ -37,4 +37,4 @@ const useBoxState = () => {
   return keys;
 };
 
-export default useBoxState;
+export default useKeyState;

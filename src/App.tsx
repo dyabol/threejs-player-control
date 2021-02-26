@@ -10,6 +10,7 @@ import ControledBox from "./components/ControledBox";
 
 function App() {
   const cubes = [];
+
   for (let i = 0; i < 5; i++) {
     for (let j = 0; j < i; j++) {
       cubes.push(
@@ -48,12 +49,7 @@ function App() {
         <Physics
           gravity={[0, -30, 0]}
           defaultContactMaterial={{
-            friction: 0.3,
-            restitution: 0.3,
-            contactEquationStiffness: 1e8,
-            contactEquationRelaxation: 3,
-            frictionEquationStiffness: 1e8,
-            frictionEquationRelaxation: 3,
+            contactEquationStiffness: 1e6,
           }}
         >
           {cubes}
