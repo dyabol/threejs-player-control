@@ -6,7 +6,7 @@ const keyMap: { [key: string]: string } = {
   KeyS: "backward",
   KeyA: "left",
   KeyD: "right",
-  Shift: "run",
+  ShiftLeft: "run",
 };
 
 const useKeyState = () => {

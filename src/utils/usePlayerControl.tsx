@@ -27,14 +27,14 @@ const usePlayerControl = (props?: BoxProps): Api => {
   }, []);
 
   useFrameElapsed((state, delta, timeElpased) => {
-    const box = ref.current;
-    if (box) {
-      const dec = decceleration.current;
-      const acc = acceleration.current;
+    const player = ref.current;
+    if (player) {
+      const dec = decceleration.current.clone();
+      const acc = acceleration.current.clone();
       let v = velocity.current.clone();
-      let r = box.quaternion.clone();
-      let p = box.position.clone();
-      let br = box.rotation.clone();
+      let r = player.quaternion.clone();
+      let p = player.position.clone();
+      let br = player.rotation.clone();
       let q = new Quaternion();
 
       const frameDecceleration = new Vector3(
@@ -49,34 +49,51 @@ const usePlayerControl = (props?: BoxProps): Api => {
 
       v.add(frameDecceleration);
 
+      acc.multiplyScalar(3.0);
       if (keyState.run) {
-        acc.multiplyScalar(4.0);
+        acc.multiplyScalar(2.0);
       }
 
       if (keyState.forward) {
         v.z += acc.z * timeElpased;
-        const forward = new Vector3(0, 0, 1 * timeElpased * 10);
-        forward.applyQuaternion(box.quaternion);
-        p.add(forward);
       }
       if (keyState.backward) {
         v.z -= acc.z * timeElpased;
-        const backward = new Vector3(0, 0, -1 * timeElpased * 10);
-        backward.applyQuaternion(box.quaternion);
-        p.add(backward);
       }
+
+      if (keyState.jump && p.y <= 1) {
+        api.velocity.set(0, 12, 0);
+        // const jump = new Vector3(0, 1, 0);
+        // jump.applyQuaternion(player.quaternion);
+        // //jump.multiplyScalar(v.y * timeElpased * 10);
+        // p.add(jump);
+      }
+
+      const forward = new Vector3(0, 0, 1);
+      forward.applyQuaternion(player.quaternion);
+      forward.normalize();
+      forward.multiplyScalar(v.z * timeElpased);
+      p.add(forward);
+
+      const sideways = new Vector3(1, 0, 0);
+      sideways.applyQuaternion(player.quaternion);
+      sideways.normalize();
+      sideways.multiplyScalar(v.x * timeElpased);
+      p.add(sideways);
+
       if (keyState.left) {
-        q.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI * timeElpased);
+        q.setFromAxisAngle(
+          new Vector3(0, 1, 0),
+          4.0 * Math.PI * timeElpased * acceleration.current.y
+        );
         br.setFromQuaternion(r.multiply(q));
       }
       if (keyState.right) {
-        q.setFromAxisAngle(new Vector3(0, -1, 0), Math.PI * timeElpased);
+        q.setFromAxisAngle(
+          new Vector3(0, -1, 0),
+          4.0 * Math.PI * timeElpased * acceleration.current.y
+        );
         br.setFromQuaternion(r.multiply(q));
-      }
-      if (keyState.jump && box.position.y <= 1) {
-        const jump = new Vector3(0, 5, 0);
-        jump.applyQuaternion(box.quaternion);
-        p.add(jump);
       }
       api.rotation.set(br.x, br.y, br.z);
       api.position.set(p.x, p.y, p.z);
