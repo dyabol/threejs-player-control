@@ -47,10 +47,14 @@ function App() {
 
         <Sky sunPosition={new Vector3(100, 50, 100)} />
         <Physics
-          gravity={[0, -30, 0]}
+          gravity={[0, -20, 0]}
           defaultContactMaterial={{
-            contactEquationStiffness: 1e6,
+            contactEquationStiffness: 1e10,
+            contactEquationRelaxation: 10,
           }}
+          iterations={20}
+          //allowSleep={true}
+          broadphase="Naive"
         >
           {cubes}
           <Plane />
