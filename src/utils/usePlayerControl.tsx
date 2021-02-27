@@ -1,22 +1,22 @@
 import { Api, BoxProps, useBox } from "@react-three/cannon";
 import { useEffect, useRef } from "react";
 import { Quaternion, Vector3 } from "three";
-import useKeyState from "./useKeyState";
+import { useKeyState } from "./services/KeyService";
 import useFrameElapsed from "./useFrameElapsed";
 
 const usePlayerControl = (props?: BoxProps): Api => {
   const decceleration = useRef(new Vector3(-0.0005, -0.0001, -5.0));
   const acceleration = useRef(new Vector3(1, 0.125, 50.0));
   const velocity = useRef(new Vector3(0, 0, 0));
-  const keyState = useKeyState();
+  const keys = useKeyState();
 
   const [ref, api] = useBox(() => ({
     type: "Dynamic",
     fixedRotation: false,
     mass: 80,
-    position: [0, 1, 0],
+    //position: [0, 0, 0],
     angularDamping: 1,
-    args: [1, 2, 1],
+    //args: [1, 1, 1],
     ...props,
   }));
 
@@ -24,10 +24,12 @@ const usePlayerControl = (props?: BoxProps): Api => {
     api.velocity.subscribe((v) => {
       velocity.current = new Vector3(v[0], v[1], v[2]);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useFrameElapsed((state, delta, timeElpased) => {
     const player = ref.current;
+    const keyState = keys.current;
     if (player) {
       const dec = decceleration.current.clone();
       const acc = acceleration.current.clone();
@@ -62,7 +64,7 @@ const usePlayerControl = (props?: BoxProps): Api => {
       }
 
       if (keyState.jump && p.y <= 1) {
-        api.velocity.set(0, 12, 0);
+        api.velocity.set(0, 7, 0);
         // const jump = new Vector3(0, 1, 0);
         // jump.applyQuaternion(player.quaternion);
         // //jump.multiplyScalar(v.y * timeElpased * 10);

@@ -6,7 +6,7 @@ import Plane from "./components/Plane";
 import { Physics } from "@react-three/cannon";
 import { Vector3 } from "three";
 import Box from "./components/Box";
-import ControledBox from "./components/ControledBox";
+import Player from "./components/Player";
 
 function App() {
   const cubes = [];
@@ -54,7 +54,7 @@ function App() {
         >
           {cubes}
           <Plane />
-          <ControledBox />
+          <Player />
           {/* <Suspense fallback={<Loading />}>
             <Player />
           </Suspense> */}
