@@ -51,7 +51,6 @@ const usePlayerAnimation = (scene: Group, animations: AnimationClip[]) => {
   });
 
   const walk = () => {
-    debugger;
     const curAction = actions.walk;
     if (playerPrevState.current) {
       const prevAction = actions[playerPrevState.current];
