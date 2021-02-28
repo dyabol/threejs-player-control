@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { getRandomColor } from "../utils/color";
-import { InitValue, Keys } from "../utils/services/KeyService";
 import { useSocket } from "../utils/services/WebSocketService";
 import usePlayerControl from "../utils/usePlayerControl";
 
@@ -10,8 +9,8 @@ type Props = {
 
 const Box: React.FC<Props> = (props) => {
   const socket = useSocket();
-  const keys = useRef<Keys>(InitValue);
-  const [ref] = usePlayerControl(keys, props);
+  const keys = useRef<null>(null);
+  const [ref] = usePlayerControl(props);
 
   const onMessage = (event: MessageEvent) => {
     keys.current = JSON.parse(event.data).keys;

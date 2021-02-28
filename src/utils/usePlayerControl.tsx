@@ -1,13 +1,10 @@
 import { Api, BoxProps, useBox } from "@react-three/cannon";
 import { useEffect, useRef } from "react";
 import { Quaternion, Vector3 } from "three";
-import { Keys } from "./services/KeyService";
+import { getKeys } from "./services/Keyboard";
 import useFrameElapsed from "./useFrameElapsed";
 
-const usePlayerControl = (
-  keys: React.MutableRefObject<Keys | null>,
-  props?: BoxProps
-): Api => {
+const usePlayerControl = (props?: BoxProps): Api => {
   const decceleration = useRef(new Vector3(-0.0005, -0.0001, -5.0));
   const acceleration = useRef(new Vector3(1, 0.125, 50.0));
   const velocity = useRef(new Vector3(0, 0, 0));
@@ -31,7 +28,7 @@ const usePlayerControl = (
 
   useFrameElapsed((state, delta, timeElpased) => {
     const player = ref.current;
-    const keyState = keys.current;
+    const keyState = getKeys();
     if (player && keyState) {
       const dec = decceleration.current.clone();
       const acc = acceleration.current.clone();
@@ -54,7 +51,7 @@ const usePlayerControl = (
       v.add(frameDecceleration);
 
       acc.multiplyScalar(3.0);
-      if (keyState.run) {
+      if (keyState.shift) {
         acc.multiplyScalar(2.0);
       }
 
@@ -65,7 +62,7 @@ const usePlayerControl = (
         v.z -= acc.z * timeElpased;
       }
 
-      if (keyState.jump && p.y <= 1) {
+      if (keyState.space && p.y <= 1) {
         api.velocity.set(0, 7, 0);
         // const jump = new Vector3(0, 1, 0);
         // jump.applyQuaternion(player.quaternion);

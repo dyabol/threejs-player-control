@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useFrame } from "react-three-fiber";
 import { AnimationAction, AnimationClip, AnimationMixer, Group } from "three";
-import { useKeyState } from "./services/KeyService";
+import { Keys, subscribe } from "./services/Keyboard";
 
-const usePlayerAnimation = (scene: Group, animations: AnimationClip[]) => {
+type Props = { scene: Group; animations: AnimationClip[] };
+
+const PlayerAnimation: React.FC<Props> = ({ scene, animations }) => {
   const playerPrevState = useRef<string | null>("idle");
   const playerState = useRef<string>("idle");
   const mixer = new AnimationMixer(scene);
@@ -13,28 +15,32 @@ const usePlayerAnimation = (scene: Group, animations: AnimationClip[]) => {
     run: mixer.clipAction(AnimationClip.findByName(animations, "Run")),
   };
 
-  useFrame((state, delta) => {
-    mixer.update(delta);
-  });
+  const getState = (keys: Keys) => {
+    if (keys.forward || keys.backward) {
+      if (keys.shift) {
+        return "run";
+      } else {
+        return "walk";
+      }
+    }
+    return "idle";
+  };
+
+  useEffect(
+    () =>
+      subscribe((keys) => {
+        playerState.current = getState(keys);
+      }),
+    []
+  );
 
   useEffect(() => {
     actions.idle.play();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useKeyState((keys) => {
-    if (keys.forward || keys.backward) {
-      if (keys.run) {
-        playerState.current = "run";
-      } else {
-        playerState.current = "walk";
-      }
-    } else {
-      playerState.current = "idle";
-    }
-  });
-
-  useFrame(() => {
+  useFrame((state, delta) => {
+    mixer.update(delta);
     if (playerState.current !== playerPrevState.current) {
       switch (playerState.current) {
         case "walk":
@@ -111,6 +117,8 @@ const usePlayerAnimation = (scene: Group, animations: AnimationClip[]) => {
       curAction.play();
     }
   };
+
+  return null;
 };
 
-export default usePlayerAnimation;
+export default PlayerAnimation;
