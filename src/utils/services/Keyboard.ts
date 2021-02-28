@@ -14,7 +14,7 @@ const keyMap: { [key: string]: keyof Keys } = {
 const onKeyDownHandler = ({ code }: KeyboardEvent) => {
   const { keyDown, keys } = useKeyboard.getState();
   const key = keyMap[code];
-  if (key && !keys[key]) {
+  if (key && !keys[0][key]) {
     keyDown(key);
   }
 };
@@ -32,9 +32,9 @@ export const init = () => {
 };
 
 export const getKeys = () => {
-  return useKeyboard.getState().keys;
+  return useKeyboard.getState().keys[0];
 };
 
 export const subscribe = (callBack: (keys: Keys) => void) => {
-  return useKeyboard.subscribe(callBack, (state) => state.keys);
+  return useKeyboard.subscribe(callBack, (state) => state.keys[0]);
 };

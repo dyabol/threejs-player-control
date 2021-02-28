@@ -10,8 +10,10 @@ import Player from "./components/Player/Player";
 import Loading from "./components/Loading";
 import Enemy from "./components/Enemy";
 import * as Keyboard from "./utils/services/Keyboard";
+import * as WebSocket from "./utils/services/WebSocket";
 
 Keyboard.init();
+WebSocket.init();
 
 function App() {
   const cubes = [];

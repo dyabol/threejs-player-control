@@ -11,22 +11,24 @@ export type Keys = {
 };
 
 export type KeyboardState = {
-  keys: Keys;
+  keys: Keys[];
   keyDown: (key: keyof Keys) => void;
   keyUp: (key: keyof Keys) => void;
 };
 
 export const useKeyboard = create<KeyboardState>(
   immer((set) => ({
-    keys: {
-      space: false,
-      forward: false,
-      backward: false,
-      left: false,
-      right: false,
-      shift: false,
-    },
-    keyDown: (key) => set((state) => void (state.keys[key] = true)),
-    keyUp: (key) => set((state) => void (state.keys[key] = false)),
+    keys: [
+      {
+        space: false,
+        forward: false,
+        backward: false,
+        left: false,
+        right: false,
+        shift: false,
+      },
+    ],
+    keyDown: (key) => set((state) => void (state.keys[0][key] = true)),
+    keyUp: (key) => set((state) => void (state.keys[0][key] = false)),
   }))
 );

@@ -1,26 +1,23 @@
 import { BoxProps } from "@react-three/cannon";
 import { useGLTF } from "@react-three/drei";
-import React, { useEffect, useState } from "react";
-import { v4 } from "uuid";
+import React, { useEffect } from "react";
 import PlayerAnimation from "./PlayerAnimation";
 import usePlayerControl from "./usePlayerControl";
 import ThirdCamera from "../ThirdCamera";
+import { sendKeys } from "../../utils/services/WebSocket";
+import { subscribe, Keys } from "../../utils/services/Keyboard";
 
 const Player = (props?: BoxProps) => {
-  const [id] = useState(v4());
-
-  // const keys = useKeyState((keys) => {
-  //   socket.send(
-  //     JSON.stringify({
-  //       id,
-  //       keys,
-  //     })
-  //   );
-  // });
-
   const [ref] = usePlayerControl(props);
-
   const { scene, animations } = useGLTF("/models/gltf/Soldier.glb");
+
+  useEffect(
+    () =>
+      subscribe((keys: Keys) => {
+        sendKeys(keys);
+      }),
+    []
+  );
 
   useEffect(() => {
     scene.rotateY(Math.PI);

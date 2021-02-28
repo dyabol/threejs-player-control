@@ -10,9 +10,12 @@ const wsServer = new WebSocket.Server({ noServer: true });
 
 wsServer.on('connection', (socket) => {
   socket.on('message', (data) => {
+    const d = JSON.parse(data);
+    let id = 0;
     wsServer.clients.forEach((client) => {
+      id += 1;
       if (client !== socket && client.readyState === WebSocket.OPEN) {
-            client.send(data);
+            client.send(JSON.stringify({...d, id}));
       }
     });
   });
