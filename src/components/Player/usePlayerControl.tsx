@@ -1,8 +1,8 @@
 import { Api, BoxProps, useBox } from "@react-three/cannon";
 import { useEffect, useRef } from "react";
 import { Quaternion, Vector3 } from "three";
-import { getKeys } from "./services/Keyboard";
-import useFrameElapsed from "./useFrameElapsed";
+import { getKeys } from "../../utils/services/Keyboard";
+import useFrameElapsed from "../../utils/useFrameElapsed";
 
 const usePlayerControl = (props?: BoxProps): Api => {
   const decceleration = useRef(new Vector3(-0.0005, -0.0001, -5.0));

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useFrame } from "react-three-fiber";
 import { AnimationAction, AnimationClip, AnimationMixer, Group } from "three";
-import { Keys, subscribe } from "./services/Keyboard";
+import { Keys, subscribe } from "../../utils/services/Keyboard";
 
 type Props = { scene: Group; animations: AnimationClip[] };
 

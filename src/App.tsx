@@ -8,8 +8,10 @@ import { Vector3 } from "three";
 import Box from "./components/Box";
 import Player from "./components/Player/Player";
 import Loading from "./components/Loading";
-import { WebSocketProvider } from "./utils/services/WebSocketService";
 import Enemy from "./components/Enemy";
+import * as Keyboard from "./utils/services/Keyboard";
+
+Keyboard.init();
 
 function App() {
   const cubes = [];
@@ -33,39 +35,37 @@ function App() {
       colorManagement
       gl={{ alpha: false }}
     >
-      <WebSocketProvider>
-        <gridHelper args={[100, 10, 0x888888, 0x444444]} />
-        <CameraControls />
-        <hemisphereLight intensity={0.35} />
-        <spotLight
-          position={[100, 50, 100]}
-          angle={0.3}
-          penumbra={1}
-          intensity={2}
-          castShadow
-          shadow-mapSize-width={256}
-          shadow-mapSize-height={256}
-        />
+      <gridHelper args={[100, 10, 0x888888, 0x444444]} />
+      <CameraControls />
+      <hemisphereLight intensity={0.35} />
+      <spotLight
+        position={[100, 50, 100]}
+        angle={0.3}
+        penumbra={1}
+        intensity={2}
+        castShadow
+        shadow-mapSize-width={256}
+        shadow-mapSize-height={256}
+      />
 
-        <Sky sunPosition={new Vector3(100, 50, 100)} />
-        <Physics
-          gravity={[0, -20, 0]}
-          defaultContactMaterial={{
-            contactEquationStiffness: 1e10,
-            contactEquationRelaxation: 10,
-          }}
-          iterations={20}
-          //allowSleep={true}
-          broadphase="Naive"
-        >
-          {cubes}
-          <Plane />
-          <Enemy position={[0, 0, 0]} />
-          <Suspense fallback={<Loading />}>
-            <Player />
-          </Suspense>
-        </Physics>
-      </WebSocketProvider>
+      <Sky sunPosition={new Vector3(100, 50, 100)} />
+      <Physics
+        gravity={[0, -20, 0]}
+        defaultContactMaterial={{
+          contactEquationStiffness: 1e10,
+          contactEquationRelaxation: 10,
+        }}
+        iterations={20}
+        //allowSleep={true}
+        broadphase="Naive"
+      >
+        {cubes}
+        <Plane />
+        <Enemy position={[0, 0, 0]} />
+        <Suspense fallback={<Loading />}>
+          <Player />
+        </Suspense>
+      </Physics>
     </Canvas>
   );
 }

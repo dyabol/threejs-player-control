@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from "react";
 import { TransformControls } from "@react-three/drei";
 import { TransformControls as TransformControlsImpl } from "three/examples/jsm/controls/TransformControls";
 import { Object3D } from "three/src/core/Object3D";
-import { useStore } from "../Store";
+import { useOrbit } from "../zustand/OrbitStore";
 
 type Props = {
   children: React.ReactElement<Object3D>;
 };
 
 const Transform: React.FC<Props> = ({ children }) => {
-  const setOrbitEnabled = useStore((state) => state.setOrbitEnabled);
+  const setOrbitEnabled = useOrbit((state) => state.setOrbitEnabled);
   const transform = useRef<TransformControlsImpl>(null);
   useEffect(() => {
     const control = transform.current;

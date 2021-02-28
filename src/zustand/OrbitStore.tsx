@@ -1,11 +1,11 @@
 import create from "zustand";
 
-type State = {
+type OrbitState = {
   orbitEnabled: boolean;
   setOrbitEnabled: (orbitEnabled: boolean) => void;
 };
 
-export const useStore = create<State>((set) => ({
+export const useOrbit = create<OrbitState>((set) => ({
   orbitEnabled: true,
   setOrbitEnabled: (orbitEnabled) => set({ orbitEnabled }),
 }));

@@ -2,14 +2,14 @@ import { useRef } from "react";
 import { useFrame, useThree } from "react-three-fiber";
 import { OrbitControls } from "@react-three/drei";
 import { OrbitControls as OrbitControlsImpl } from "three/examples/jsm/controls/OrbitControls";
-import { useStore } from "../Store";
+import { useOrbit } from "../zustand/OrbitStore";
 
 const CameraControls = () => {
   const {
     camera,
     gl: { domElement },
   } = useThree();
-  const orbitEnabled = useStore((state) => state.orbitEnabled);
+  const orbitEnabled = useOrbit((state) => state.orbitEnabled);
   const controls = useRef<OrbitControlsImpl>(null);
   useFrame(() => controls.current?.update());
 

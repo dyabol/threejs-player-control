@@ -2,14 +2,13 @@ import { BoxProps } from "@react-three/cannon";
 import { useGLTF } from "@react-three/drei";
 import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
-import { useSocket } from "../../utils/services/WebSocketService";
-import PlayerAnimation from "../../utils/PlayerAnimation";
-import usePlayerControl from "../../utils/usePlayerControl";
+import PlayerAnimation from "./PlayerAnimation";
+import usePlayerControl from "./usePlayerControl";
 import ThirdCamera from "../ThirdCamera";
 
 const Player = (props?: BoxProps) => {
   const [id] = useState(v4());
-  const socket = useSocket();
+
   // const keys = useKeyState((keys) => {
   //   socket.send(
   //     JSON.stringify({
