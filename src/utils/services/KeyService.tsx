@@ -9,7 +9,7 @@ const keyMap: { [key: string]: string } = {
   ShiftLeft: "run",
 };
 
-const InitValue = {
+export const InitValue = {
   jump: false,
   forward: false,
   backward: false,

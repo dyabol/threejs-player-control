@@ -3,13 +3,10 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { KeyProvider } from "./utils/services/KeyService";
 
 ReactDOM.render(
   <React.StrictMode>
-    <KeyProvider>
-      <App />
-    </KeyProvider>
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );

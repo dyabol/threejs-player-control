@@ -19,6 +19,7 @@ const usePlayerAnimation = (scene: Group, animations: AnimationClip[]) => {
 
   useEffect(() => {
     actions.idle.play();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useKeyState((keys) => {

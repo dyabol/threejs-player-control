@@ -1,14 +1,16 @@
 import { Api, BoxProps, useBox } from "@react-three/cannon";
 import { useEffect, useRef } from "react";
 import { Quaternion, Vector3 } from "three";
-import { useKeyState } from "./services/KeyService";
+import { Keys } from "./services/KeyService";
 import useFrameElapsed from "./useFrameElapsed";
 
-const usePlayerControl = (props?: BoxProps): Api => {
+const usePlayerControl = (
+  keys: React.MutableRefObject<Keys | null>,
+  props?: BoxProps
+): Api => {
   const decceleration = useRef(new Vector3(-0.0005, -0.0001, -5.0));
   const acceleration = useRef(new Vector3(1, 0.125, 50.0));
   const velocity = useRef(new Vector3(0, 0, 0));
-  const keys = useKeyState();
 
   const [ref, api] = useBox(() => ({
     type: "Dynamic",
@@ -30,7 +32,7 @@ const usePlayerControl = (props?: BoxProps): Api => {
   useFrameElapsed((state, delta, timeElpased) => {
     const player = ref.current;
     const keyState = keys.current;
-    if (player) {
+    if (player && keyState) {
       const dec = decceleration.current.clone();
       const acc = acceleration.current.clone();
       let v = velocity.current.clone();

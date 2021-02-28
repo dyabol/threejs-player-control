@@ -1,14 +1,27 @@
 import { BoxProps } from "@react-three/cannon";
 import { useGLTF } from "@react-three/drei";
-import React, { useEffect } from "react";
-import { useFrame } from "react-three-fiber";
-import { Euler, Vector3 } from "three";
+import React, { useEffect, useState } from "react";
+import { useGraph } from "react-three-fiber";
+import { v4 } from "uuid";
+import { useKeyState } from "../utils/services/KeyService";
+import { useSocket } from "../utils/services/WebSocketService";
 import usePlayerAnimation from "../utils/usePlayerAnimation";
 import usePlayerControl from "../utils/usePlayerControl";
 import ThirdCamera from "./ThirdCamera";
 
 const Player = (props?: BoxProps) => {
-  const [ref] = usePlayerControl(props);
+  const [id] = useState(v4());
+  const socket = useSocket();
+  const keys = useKeyState((keys) => {
+    socket.send(
+      JSON.stringify({
+        id,
+        keys,
+      })
+    );
+  });
+  const [ref] = usePlayerControl(keys, props);
+
   const { scene, animations } = useGLTF("/models/gltf/Soldier.glb");
 
   usePlayerAnimation(scene, animations);
