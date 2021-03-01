@@ -1,4 +1,5 @@
 import create from "zustand";
+import { getPlayerId } from "../utils/services/Game";
 import { immer } from "./middleware/Immer";
 
 export type Keys = {
@@ -11,24 +12,25 @@ export type Keys = {
 };
 
 export type KeyboardState = {
-  keys: Keys[];
+  keys: { [id: string]: Keys };
   keyDown: (key: keyof Keys) => void;
   keyUp: (key: keyof Keys) => void;
+  setKeys: (keys: Keys, id: string) => void;
 };
 
 export const useKeyboard = create<KeyboardState>(
   immer((set) => ({
-    keys: [
-      {
-        space: false,
-        forward: false,
-        backward: false,
-        left: false,
-        right: false,
-        shift: false,
-      },
-    ],
-    keyDown: (key) => set((state) => void (state.keys[0][key] = true)),
-    keyUp: (key) => set((state) => void (state.keys[0][key] = false)),
+    keys: {},
+    keyDown: (key) =>
+      set((state) => {
+        const id = getPlayerId();
+        state.keys[id][key] = true;
+      }),
+    keyUp: (key) =>
+      set((state) => {
+        const id = getPlayerId();
+        state.keys[id][key] = false;
+      }),
+    setKeys: (keys, id) => set((state) => void (state.keys[id] = keys)),
   }))
 );

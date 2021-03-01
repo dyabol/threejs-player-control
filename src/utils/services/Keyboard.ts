@@ -1,4 +1,5 @@
 import { Keys as KeyType, useKeyboard } from "../../zustand/KeyboardStore";
+import { getPlayerId } from "./Game";
 
 export type Keys = KeyType;
 
@@ -11,10 +12,20 @@ const keyMap: { [key: string]: keyof Keys } = {
   ShiftLeft: "shift",
 };
 
+const keysInit: Keys = {
+  space: false,
+  forward: false,
+  backward: false,
+  left: false,
+  right: false,
+  shift: false,
+};
+
 const onKeyDownHandler = ({ code }: KeyboardEvent) => {
   const { keyDown, keys } = useKeyboard.getState();
+  const id = getPlayerId();
   const key = keyMap[code];
-  if (key && !keys[0][key]) {
+  if (key && !keys[id][key]) {
     keyDown(key);
   }
 };
@@ -31,10 +42,19 @@ export const init = () => {
   window.addEventListener("keyup", onKeyUpHandler, false);
 };
 
-export const getKeys = () => {
-  return useKeyboard.getState().keys[0];
+export const getKeys = (id: string) => {
+  return useKeyboard.getState().keys[id];
 };
 
 export const subscribe = (callBack: (keys: Keys) => void) => {
-  return useKeyboard.subscribe(callBack, (state) => state.keys[0]);
+  const id = getPlayerId();
+  return useKeyboard.subscribe(callBack, (state) => state.keys[id]);
+};
+
+export const setKeys = (keys: Keys, id: string) => {
+  useKeyboard.getState().setKeys(keys, id);
+};
+
+export const initKeys = (id: string) => {
+  useKeyboard.getState().setKeys(keysInit, id);
 };

@@ -1,5 +1,5 @@
 import { useBox } from "@react-three/cannon";
-import React from "react";
+import React, { useMemo } from "react";
 import { getRandomColor } from "../utils/color";
 
 type Props = {
@@ -7,6 +7,7 @@ type Props = {
 };
 
 const Box: React.FC<Props> = (props) => {
+  const color = useMemo(() => getRandomColor(), []);
   const [ref] = useBox(() => ({
     ...props,
     mass: 1,
@@ -17,7 +18,7 @@ const Box: React.FC<Props> = (props) => {
   return (
     <mesh receiveShadow castShadow {...props} ref={ref}>
       <boxBufferGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={getRandomColor()} />
+      <meshStandardMaterial color={color} />
     </mesh>
   );
 };

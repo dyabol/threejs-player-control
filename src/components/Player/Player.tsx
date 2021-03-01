@@ -6,9 +6,10 @@ import usePlayerControl from "./usePlayerControl";
 import ThirdCamera from "../ThirdCamera";
 import { sendKeys } from "../../utils/services/WebSocket";
 import { subscribe, Keys } from "../../utils/services/Keyboard";
+import { getPlayerId } from "../../utils/services/Game";
 
 const Player = (props?: BoxProps) => {
-  const [ref] = usePlayerControl(props);
+  const [ref] = usePlayerControl(getPlayerId(), props);
   const { scene, animations } = useGLTF("/models/gltf/Soldier.glb");
 
   useEffect(
