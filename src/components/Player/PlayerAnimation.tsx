@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useFrame } from "react-three-fiber";
 import { AnimationAction, AnimationClip, AnimationMixer, Group } from "three";
-import { Keys, subscribe } from "../../utils/services/Keyboard";
+import { Keys, subscribeKeyboard } from "../../utils/services/Keyboard";
 
 type Props = { scene: Group; animations: AnimationClip[] };
 
@@ -28,7 +28,7 @@ const PlayerAnimation: React.FC<Props> = ({ scene, animations }) => {
 
   useEffect(
     () =>
-      subscribe((keys) => {
+      subscribeKeyboard((keys) => {
         playerState.current = getState(keys);
       }),
     []

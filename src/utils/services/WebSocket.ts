@@ -1,7 +1,4 @@
 import { useGame } from "../../zustand/GameStore";
-import { Keys } from "../../zustand/KeyboardStore";
-import { getPlayerId } from "./Game";
-import { initKeys, setKeys } from "./Keyboard";
 
 let webSocket: WebSocket | undefined = undefined;
 
@@ -31,19 +28,9 @@ export const init = () => {
     const response = JSON.parse(event.data) as PlayerProtocol;
     const { type, id, data } = response;
     switch (type) {
-      case Types.Keys:
-        setKeys(data, id);
-        break;
       case Types.PlayerId:
         if (id) {
-          useGame.getState().setPlayerId(id);
-          initKeys(id);
-        }
-        break;
-      case Types.PlayerList:
-        if (data) {
-          useGame.getState().setPlayerList(data);
-          initKeys(id);
+          useGame.getState().setClientId(id);
         }
         break;
     }
@@ -63,13 +50,4 @@ export const getSocket = () => {
 
 export const sendMessage = (data: PlayerProtocol) => {
   getSocket().send(JSON.stringify(data));
-};
-
-export const sendKeys = (keys: Keys) => {
-  const id = getPlayerId();
-  sendMessage({
-    type: Types.Keys,
-    data: keys,
-    id,
-  });
 };

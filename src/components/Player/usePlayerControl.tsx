@@ -5,7 +5,6 @@ import { getKeys } from "../../utils/services/Keyboard";
 import useFrameElapsed from "../../utils/useFrameElapsed";
 
 const usePlayerControl = (id: string, props?: BoxProps): Api => {
-  console.log(id);
   const decceleration = useRef(new Vector3(-0.0005, -0.0001, -5.0));
   const acceleration = useRef(new Vector3(1, 0.125, 50.0));
   const velocity = useRef(new Vector3(0, 0, 0));
@@ -29,7 +28,7 @@ const usePlayerControl = (id: string, props?: BoxProps): Api => {
 
   useFrameElapsed((state, delta, timeElpased) => {
     const player = ref.current;
-    const keyState = getKeys(id);
+    const keyState = getKeys();
     if (player && keyState) {
       const dec = decceleration.current.clone();
       const acc = acceleration.current.clone();
